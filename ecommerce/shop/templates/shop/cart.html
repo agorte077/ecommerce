@@ -1,0 +1,40 @@
+<!-- cart.html -->
+
+{% extends "shop/base.html" %}
+
+{% block title %}Panier{% endblock %}
+
+{% block content %}
+<h1>Votre panier</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Produit</th>
+      <th scope="col">Quantité</th>
+      <th scope="col">Prix unitaire</th>
+      <th scope="col">Total</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in cart_items %}
+    <tr>
+      <td>{{ item.product.title }}</td>
+      <td>
+        <form action="{% url 'update_cart' item.id %}" method="post">
+          {% csrf_token %}
+          <input type="number" name="quantity" value="{{ item.quantity }}" min="1">
+          <button type="submit" class="btn btn-primary">Mettre à jour</button>
+        </form>
+      </td>
+      <td>{{ item.product.price }} $</td>
+      <td>{{ item.product.price * item.quantity }} $</td>
+      <td>
+        <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-danger">Supprimer</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<h3>Total: {{ total_price }} $</h3>
+{% endblock %}
